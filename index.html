@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benton Recruiting Database</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;font-size:14px}
+header{background:#1a1a1a;color:#fff;padding:14px 20px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+header h1{font-size:17px;font-weight:600;letter-spacing:-.3px}
+header span{font-size:12px;color:#888}
+.athlete{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;font-size:12px;color:#555}
+.athlete strong{color:#1a1a1a}
+.controls{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls input,.controls select{font-size:12px;padding:5px 9px;border:1px solid #d0d0d0;border-radius:6px;background:#fafafa;color:#1a1a1a;height:30px}
+.controls input:focus,.controls select:focus{outline:none;border-color:#555}
+.controls label{font-size:11px;color:#777;white-space:nowrap}
+.fl{display:flex;align-items:center;gap:5px}
+.stats{background:#fafafa;border-bottom:1px solid #e0e0e0;padding:8px 20px;display:flex;gap:20px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .n{font-size:20px;font-weight:600;color:#1a1a1a}
+.stat .l{font-size:11px;color:#888}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{text-align:left;padding:8px 10px;font-size:11px;font-weight:600;color:#666;background:#f0efe9;border-bottom:2px solid #ddd;position:sticky;top:0;cursor:pointer;user-select:none;white-space:nowrap}
+thead th:hover{background:#e8e7e0;color:#1a1a1a}
+tbody tr{border-bottom:1px solid #eee;transition:background .1s}
+tbody tr:hover{background:#fafaf7}
+tbody td{padding:7px 10px;vertical-align:middle}
+.t1{border-left:4px solid #1D9E75}
+.t2{border-left:4px solid #378ADD}
+.t3{border-left:4px solid #ccc}
+.school{font-weight:600;font-size:13px;white-space:nowrap}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;white-space:nowrap;margin:1px}
+.bb{background:#dbeafe;color:#1e40af}
+.bl{background:#d1fae5;color:#065f46}
+.bld{background:#fef3c7;color:#92400e}
+.bm{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+.bnew{background:#fce7f3;color:#9d174d}
+.bfbs{background:#ede9fe;color:#4c1d95}
+.bfcs{background:#dcfce7;color:#14532d}
+.bj{background:#fef9c3;color:#713f12}
+.bd2{background:#fee2e2;color:#7f1d1d}
+.bd3{background:#ffedd5;color:#7c2d12}
+.op{color:#065f46;font-weight:700}
+.on{color:#991b1b;font-weight:600}
+.oa{color:#9ca3af}
+.dep{color:#6b7280;white-space:nowrap}
+.coach-col{color:#374151;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.byu-col{color:#6b7280;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.notes-col{color:#6b7280;font-size:11px;max-width:220px}
+.nr{padding:40px;text-align:center;color:#9ca3af;font-size:14px}
+.legend{padding:8px 20px;background:#fff;border-bottom:1px solid #e0e0e0;font-size:11px;color:#888;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-bar{width:12px;height:14px;border-radius:1px}
+footer{padding:12px 20px;font-size:11px;color:#aaa;text-align:center;background:#fff;border-top:1px solid #eee;margin-top:4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Benton Recruiting Database</h1>
+  <span id="updated">Last updated: April 20, 2026</span>
+</header>
+<div class="athlete">
+  <strong>Benton [Last]</strong> &nbsp;·&nbsp; 6'0" / 200 lbs &nbsp;·&nbsp; DE/LB &nbsp;·&nbsp;
+  51 tkl / 6 TFL / 2.6 sacks / 1 FF / 3 PBU &nbsp;·&nbsp; 2nd team all-conference &nbsp;·&nbsp;
+  4.0 GPA &nbsp;·&nbsp; LDS Mission began Feb 2026 &nbsp;·&nbsp; <strong>Available fall 2028</strong>
+  &nbsp;·&nbsp; <a href="https://www.hudl.com/video/3/17484450/6939b0d88451157f45933651" target="_blank" style="color:#1D9E75">Hudl Highlights ↗</a>
+</div>
+<div class="controls">
+  <div class="fl"><label>Search</label><input type="text" id="q" placeholder="school, coach, conf..." style="width:150px"></div>
+  <div class="fl"><label>Division</label><select id="dv"><option value="">All</option><option>FBS</option><option>FCS</option><option>JUCO</option><option>D2</option><option>D3</option></select></div>
+  <div class="fl"><label>BYU coach</label><select id="by"><option value="">All</option><option value="y">Yes</option><option value="n">No</option></select></div>
+  <div class="fl"><label>LB/DE coach</label><select id="lb"><option value="">All</option><option value="y">Yes</option><option value="n">No</option></select></div>
+  <div class="fl"><label>Roster data</label><select id="da"><option value="">All</option><option value="y">Has data</option><option value="n">Missing</option></select></div>
+  <div class="fl"><label>LDS-friendly</label><select id="ld"><option value="">All</option><option value="y">Yes</option></select></div>
+  <div class="fl"><label>Opportunity</label><select id="op"><option value="">All</option><option value="p">Positive (≥0)</option><option value="n">Negative</option></select></div>
+  <div class="fl"><label>Tier</label><select id="tr"><option value="">All</option><option value="1">Tier 1 only</option><option value="2">Tier 1+2</option></select></div>
+</div>
+<div class="stats">
+  <div class="stat"><div class="n" id="s0">—</div><div class="l">programs shown</div></div>
+  <div class="stat"><div class="n" id="s1">—</div><div class="l">BYU coach</div></div>
+  <div class="stat"><div class="n" id="s2">—</div><div class="l">LB/DE coach</div></div>
+  <div class="stat"><div class="n" id="s3">—</div><div class="l">has depth data</div></div>
+  <div class="stat"><div class="n" id="s4">—</div><div class="l">need roster PDF</div></div>
+</div>
+<div class="legend">
+  <span style="font-weight:600;color:#555">Tier:</span>
+  <div class="leg"><div class="leg-bar" style="background:#1D9E75"></div><span>Tier 1 — BYU LB/DE coach + structural need</span></div>
+  <div class="leg"><div class="leg-bar" style="background:#378ADD"></div><span>Tier 2 — BYU coaching presence</span></div>
+  <div class="leg"><div class="leg-bar" style="background:#ccc"></div><span>Tier 3 — all other programs</span></div>
+</div>
+<div class="wrap">
+<table id="tbl">
+<thead><tr>
+  <th onclick="srt('school')" style="min-width:140px">School <span id="a0"></span></th>
+  <th onclick="srt('div')" style="width:50px">Div <span id="a1"></span></th>
+  <th onclick="srt('conf')" style="width:90px">Conf <span id="a2"></span></th>
+  <th onclick="srt('opp')" style="width:50px">Opp <span id="a3"></span></th>
+  <th style="min-width:150px">BYU Coach(es)</th>
+  <th style="min-width:150px">LB/DE Coach</th>
+  <th style="width:120px">FR/SO/JR/SR/GR</th>
+  <th style="width:110px">Flags</th>
+  <th style="min-width:180px">Notes</th>
+</tr></thead>
+<tbody id="tb"></tbody>
+</table>
+<div class="nr" id="nr" style="display:none">No programs match the current filters.</div>
+</div>
+<footer>Benton Recruiting Database · Built with Claude · Last updated April 20, 2026 · <a href="https://github.com/budderbean2pt0/benton-recruiting" style="color:#888">GitHub</a></footer>
+
+<script>
+const P=[
+{school:'Utah State',conf:'Mtn West',div:'FBS',fr:2,so:5,jr:2,sr:5,gr:1,opp:1,byuCoach:'Mendenhall (HC), Jorgensen (OLB), Anae (OC), Tahi (Admin)',lbCoach:'Jan Jorgensen — OLB coach',hasData:true,lds:true,tier:1,notes:'#1 FBS target. Mission-aware. 4 BYU staff. Logan UT.',x:'@Janimal84 @BroncoMendenhall @USUAggies'},
+{school:'Wash. State',conf:'Pac-12',div:'FBS',fr:1,so:4,jr:2,sr:1,gr:1,opp:-1,byuCoach:'Trent Bray (DC/LB)',lbCoach:'Trent Bray — DC/LB',hasData:true,lds:false,tier:1,notes:'Bray coaches exact position. Pac-12. Pullman WA.',x:'@CoachTrentBray'},
+{school:'USC',conf:'Big Ten',div:'FBS',fr:7,so:2,jr:2,sr:4,gr:0,opp:-3,byuCoach:'Shaun Nua (DE), Simmons (Asst HC)',lbCoach:'Shaun Nua — DE coach',hasData:true,lds:false,tier:1,notes:'Nua coaches pass rushers = exact position. 4 SRs. LA.',x:'@CoachNua'},
+{school:'N. Colorado',conf:'Big Sky',div:'FCS',fr:2,so:4,jr:2,sr:1,gr:0,opp:-3,byuCoach:'Ed Lamb (HC), Preston Hadley (DC/LB)',lbCoach:'Preston Hadley — DC/LB',hasData:true,lds:false,tier:1,notes:'Hadley coaches exact position. Greeley CO.',x:'@UNCLamb @CoachPHadley'},
+{school:'Weber State',conf:'Big Sky',div:'FCS',fr:5,so:5,jr:1,sr:5,gr:0,opp:-4,byuCoach:'Jacobson (Assoc HC), Fowler (DC/S), Asiata (Asst)',lbCoach:'Gavin Fowler — DC/Safeties',hasData:true,lds:true,tier:1,notes:'3 BYU coaches. 5 SRs leaving 2026. LDS culture. Ogden UT.',x:'@gavinfowler16 @CoachAsiata @CoachJacobsonTJ'},
+{school:'UCLA',conf:'Big Ten',div:'FBS',fr:4,so:4,jr:1,sr:2,gr:0,opp:-5,byuCoach:"Vic So'oto (LB/Co-DC)",lbCoach:"Vic So'oto — LB/Co-DC",hasData:true,lds:false,tier:1,notes:"So'oto coaches exact position. Big Ten. LA.",x:'@CoachSooto'},
+{school:'Colorado St.',conf:'Mtn West',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Matt Ah You (LB/Nickel)',lbCoach:'Matt Ah You — LB/Nickelbacks',hasData:false,lds:false,tier:1,notes:'No year class in PDF. Scrape csuramsathletics.com.',x:'@Matty_AhYou'},
+{school:'Snow College',conf:'SWJCFC',div:'JUCO',fr:23,so:6,jr:1,sr:0,gr:0,opp:-28,byuCoach:'Erekson (HC), James Dye (Asst STC/WR)',lbCoach:'Zac Erekson — HC',hasData:true,lds:true,tier:1,notes:'#1 JUCO. 2 BYU staff. LDS pipeline to BYU/USU. Ephraim UT.',x:'@ZacErekson'},
+{school:'Michigan',conf:'Big Ten',div:'FBS',fr:4,so:7,jr:4,sr:4,gr:5,opp:2,byuCoach:'Whittingham (HC), Beck (OC/QB), Gilford (DB)',lbCoach:'No BYU LB coach',hasData:true,lds:false,tier:2,notes:'9 upper-class LBs departing. Whittingham HC.',x:'@Coach_Beck7 @jernarogilford'},
+{school:'Air Force',conf:'Mtn West',div:'FBS',fr:0,so:4,jr:4,sr:6,gr:0,opp:6,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:true,tier:3,notes:'6 SR LBs. Service academy. LDS mission-aware. Option offense.',x:''},
+{school:'Nevada',conf:'Mtn West',div:'FBS',fr:4,so:2,jr:2,sr:2,gr:1,opp:1,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:false,tier:3,notes:'4 FR LBs, 1 GR. LB+EDGE counted. Reno NV.',x:''},
+{school:'Coastal Carolina',conf:'Sun Belt',div:'FBS',fr:2,so:3,jr:5,sr:3,gr:0,opp:1,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:false,tier:3,notes:'2 FR, 3 SO, 5 JR, 3 SR LB+DE. Conway SC.',x:''},
+{school:'SDSU',conf:'Mtn West',div:'FBS',fr:2,so:2,jr:2,sr:3,gr:0,opp:1,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:false,tier:3,notes:'~3 SR, 2 JR, 2 SO, 2 FR LB/EDGE (partial). San Diego CA.',x:''},
+{school:'App State',conf:'Sun Belt',div:'FBS',fr:2,so:0,jr:4,sr:2,gr:0,opp:0,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:false,tier:3,notes:'2 FR, 4 JR, 2 SR LBs. Boone NC.',x:''},
+{school:'Hawaii',conf:'Mtn West',div:'FBS',fr:2,so:4,jr:2,sr:2,gr:0,opp:0,byuCoach:'Keith Uperesa (OL)',lbCoach:'Chris Brown — Assoc HC/LBs',hasData:true,lds:true,tier:2,notes:'LB coach = Chris Brown. Polynesian/LDS culture. Honolulu.',x:'@HawaiiFootball'},
+{school:'BYU',conf:'Big 12',div:'FBS',fr:10,so:5,jr:7,sr:3,gr:0,opp:-5,byuCoach:'Sitake HC, Poppinga DC/LB, Roderick OC, Ena STC, Pouha DL, Mahe RB, Unga RB',lbCoach:'Kelly Poppinga — DC/LB',hasData:true,lds:true,tier:2,notes:'Mission-aware. 7 BYU lettermen on staff.',x:'@KalaniSitake'},
+{school:'Utah',conf:'Big 12',div:'FBS',fr:6,so:7,jr:3,sr:5,gr:0,opp:-5,byuCoach:'Atuaia (RB), Gunderson (QB)',lbCoach:'No BYU LB coach',hasData:true,lds:true,tier:2,notes:'5 SRs but 13 FR/SO offset. SLC UT.',x:'@CoachAtuaia @itsGundy'},
+{school:'Cal',conf:'Big Ten',div:'FBS',fr:2,so:7,jr:4,sr:3,gr:0,opp:-2,byuCoach:'Famika Anae (OL), Cameron Morrah (Asst TE)',lbCoach:'No BYU LB coach',hasData:true,lds:false,tier:2,notes:'2 BYU lettermen. 3SR+4JR gone by 2028. Berkeley CA.',x:'@AnaeCoach'},
+{school:'Idaho State',conf:'Big Sky',div:'FCS',fr:6,so:4,jr:2,sr:2,gr:1,opp:-5,byuCoach:'Ross Apo (WR/DB)',lbCoach:'Apo — WR/DB (not LB)',hasData:true,lds:false,tier:2,notes:'BYU connection. 2SR+1GR departing. Pocatello ID.',x:'@RossApoWR_EZ'},
+{school:'Utah Tech',conf:'WAC',div:'FCS',fr:5,so:6,jr:4,sr:1,gr:0,opp:-6,byuCoach:'Paul Peterson (Assoc HC)',lbCoach:'Peterson — Assoc HC',hasData:true,lds:true,tier:2,notes:'St. George UT. Heavy LDS culture. WAC D1.',x:'@CoachPPeterson'},
+{school:'Texas',conf:'SEC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Sarkisian (HC)',lbCoach:'Check staff',hasData:false,lds:false,tier:2,notes:'Sarkisian HC (BYU QB 1995-96). Austin TX.',x:'@CoachSark'},
+{school:'San Jose State',conf:'Mtn West',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Niumatalolo (HC)',lbCoach:'Check staff',hasData:false,lds:false,tier:2,notes:'Niumatalolo HC (BYU letterman).',x:''},
+{school:'Montana State',conf:'Big Sky',div:'FCS',fr:2,so:5,jr:2,sr:5,gr:1,opp:1,byuCoach:'',lbCoach:'Check staff',hasData:true,lds:false,tier:3,notes:'Top FCS program. 5SR+1GR departing. Bozeman MT.',x:''},
+{school:'Kilgore',conf:'SWJCFC',div:'JUCO',fr:1,so:4,jr:0,sr:0,gr:0,opp:-5,byuCoach:'',lbCoach:'Gooden — HC',hasData:true,lds:false,tier:3,notes:'2025 SWJCFC poll #1. Very active recruiter. Kilgore TX.',x:'@CoachGeee_MTXE'},
+{school:'Navarro',conf:'SWJCFC',div:'JUCO',fr:13,so:6,jr:0,sr:0,gr:0,opp:-19,byuCoach:'',lbCoach:'Parr — HC',hasData:true,lds:false,tier:3,notes:'2024 SWJCFC champs. 13 FR LBs. Corsicana TX.',x:'@ScottParr'},
+{school:'Furman',conf:'SoCon',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Justin Roper (OC)',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Roper OC (BYU alum). Greenville SC.',x:''},
+{school:'NC State',conf:'ACC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Tujague (OL/Run Game)',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Tujague OL/Run Game Coord.',x:'@Coach2J'},
+{school:'Michigan State',conf:'Big Ten',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Matt Allen (Vol. Asst)',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'',x:'@football_allen'},
+{school:'Rutgers',conf:'Big Ten',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Spencer Brown (S&C)',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'',x:'@Coach_SBrown'},
+{school:'New Mexico',conf:'Mtn West',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Mtn West. Albuquerque NM.',x:''},
+{school:'UConn',conf:'Ind',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Independent FBS. Storrs CT.',x:''},
+{school:'Louisiana Tech',conf:'CUSA',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'CUSA. Ruston LA.',x:''},
+{school:'FIU',conf:'CUSA',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'CUSA. Miami FL.',x:''},
+{school:'Liberty',conf:'CUSA',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:true,tier:3,notes:'Christian univ — LDS-friendly. Lynchburg VA.',x:''},
+{school:'NM State',conf:'CUSA',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'',x:''},
+{school:'UTEP',conf:'CUSA',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'El Paso TX.',x:''},
+{school:'Navy',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:true,tier:3,notes:'Service academy. LDS mission-aware. Option offense.',x:''},
+{school:'East Carolina',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'AAC. Greenville NC.',x:''},
+{school:'South Florida',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'AAC. Tampa FL.',x:''},
+{school:'Army',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:true,tier:3,notes:'Service academy. West Point NY. Option offense.',x:''},
+{school:'Florida Atlantic',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'AAC. Boca Raton FL.',x:''},
+{school:'Tulane',conf:'AAC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Strong recent program. New Orleans LA.',x:''},
+{school:'Virginia',conf:'ACC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'ACC. Charlottesville VA.',x:''},
+{school:'SMU',conf:'ACC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Rose Bowl 2024. Dallas TX.',x:''},
+{school:'Stanford',conf:'ACC',div:'FBS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'4.0 GPA academic fit. Stanford CA.',x:''},
+{school:'Montana',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Perennial FCS contender. Missoula MT.',x:''},
+{school:'UC Davis',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Strong academics. Davis CA.',x:''},
+{school:'Sac State',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Big Sky. Sacramento CA.',x:''},
+{school:'N. Arizona',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:true,tier:3,notes:'LDS community. Flagstaff AZ.',x:''},
+{school:'E. Washington',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Red Turf. Cheney WA.',x:''},
+{school:'Cal Poly',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Option offense. San Luis Obispo CA.',x:''},
+{school:'Idaho',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:true,tier:3,notes:'LDS community. Moscow ID.',x:''},
+{school:'Portland State',conf:'Big Sky',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Big Sky. Portland OR.',x:''},
+{school:'Missouri State',conf:'Missouri Valley',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Missouri Valley. Springfield MO.',x:''},
+{school:'Bucknell',conf:'Patriot',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Scholarship eligible. Lewisburg PA.',x:''},
+{school:'Yale',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'McGowan (DC/LB) / Barber (DE)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Harvard',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Amakihe (LB) / Johnson (DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Pennsylvania',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Justin Stovall (Assoc HC/LB)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Princeton',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Triglia (OLB) / Weick (ILB) / Verbit (DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Cornell',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Comissiong (LB) / Bhakta (LB/DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Dartmouth',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Belfiori (DC/LB) / Jones (DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Brown',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Murray (OLB) / DeCapito (DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'Columbia',conf:'Ivy',div:'FCS',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Woodley (LB) / Taylor (DL)',hasData:false,lds:false,tier:3,notes:'No athletic scholarships. 4.0 GPA fit.',x:''},
+{school:'CSU Pueblo',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Pueblo CO.',x:''},
+{school:'Chadron State',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Chadron NE.',x:''},
+{school:'Western Colorado',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Gunnison CO.',x:''},
+{school:'Colorado Mesa',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Grand Junction CO.',x:''},
+{school:'Mines',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'Strong academics. Golden CO.',x:''},
+{school:'NM Highlands',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Las Vegas NM.',x:''},
+{school:'Adams State',conf:'RMAC',div:'D2',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'',lbCoach:'Check staff',hasData:false,lds:false,tier:3,notes:'RMAC D2. Alamosa CO.',x:''},
+{school:'Southern Virginia',conf:'ODAC',div:'D3',fr:null,so:null,jr:null,sr:null,gr:null,opp:null,byuCoach:'Paul Lasike (Rugby HC; BYU RB 2012-15)',lbCoach:'Check football staff',hasData:false,lds:true,tier:3,notes:'LDS-founded univ. Buena Vista VA. Confirm football staff.',x:''},
+];
+
+let sk='opp',sd=-1,flt=[...P];
+
+function dep(p){if(p.fr===null)return'<span class="oa">—</span>';return`<span class="dep">${p.fr}/${p.so}/${p.jr}/${p.sr}/${p.gr} <span style="color:#bbb">(${p.fr+p.so+p.jr+p.sr+p.gr})</span></span>`;}
+function oppH(p){if(p.opp===null)return'<span class="oa">—</span>';const s=p.opp>0?'+':'';return`<span class="${p.opp>=0?'op':'on'}">${s}${p.opp}</span>`;}
+function divB(d){const m={FBS:'bfbs',FCS:'bfcs',JUCO:'bj',D2:'bd2',D3:'bd3'};return`<span class="badge ${m[d]||'bm'}">${d}</span>`;}
+function hasLb(p){return p.lbCoach&&!p.lbCoach.startsWith('Check')&&!p.lbCoach.startsWith('No ');}
+function flags(p){
+  let o='';
+  if(p.byuCoach)o+=`<span class="badge bb">BYU</span>`;
+  if(hasLb(p))o+=`<span class="badge bl">LB/DE</span>`;
+  if(p.lds)o+=`<span class="badge bld">LDS</span>`;
+  if(!p.hasData)o+=`<span class="badge bm">PDF needed</span>`;
+  return o;
+}
+function tc(p){return p.tier===1?'t1':p.tier===2?'t2':'t3';}
+
+function render(){
+  const tb=document.getElementById('tb'),nr=document.getElementById('nr');
+  if(!flt.length){tb.innerHTML='';nr.style.display='block';return;}
+  nr.style.display='none';
+  tb.innerHTML=flt.map(p=>{
+    const lbD=p.lbCoach&&p.lbCoach.startsWith('Check')?`<span style="color:#bbb;font-style:italic">check staff</span>`:`<span class="coach-col">${p.lbCoach||'—'}</span>`;
+    const byuD=p.byuCoach?`<span class="byu-col" title="${p.byuCoach}">${p.byuCoach}</span>`:`<span class="oa">—</span>`;
+    const xLinks=p.x?`<div style="font-size:10px;color:#9ca3af;margin-top:2px">${p.x}</div>`:'';
+    return `<tr class="${tc(p)}">
+      <td><div class="school">${p.school}</div>${divB(p.div)} <span style="font-size:11px;color:#9ca3af">${p.conf}</span></td>
+      <td style="display:none">${p.div}</td>
+      <td style="display:none">${p.conf}</td>
+      <td style="text-align:center;font-size:14px">${oppH(p)}</td>
+      <td>${byuD}</td>
+      <td>${lbD}${xLinks}</td>
+      <td>${dep(p)}</td>
+      <td>${flags(p)}</td>
+      <td class="notes-col">${p.notes}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('s0').textContent=flt.length;
+  document.getElementById('s1').textContent=flt.filter(p=>p.byuCoach).length;
+  document.getElementById('s2').textContent=flt.filter(hasLb).length;
+  document.getElementById('s3').textContent=flt.filter(p=>p.hasData).length;
+  document.getElementById('s4').textContent=flt.filter(p=>!p.hasData).length;
+}
+
+function applyF(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const dv=document.getElementById('dv').value;
+  const by=document.getElementById('by').value;
+  const lb=document.getElementById('lb').value;
+  const da=document.getElementById('da').value;
+  const ld=document.getElementById('ld').value;
+  const op=document.getElementById('op').value;
+  const tr=document.getElementById('tr').value;
+  flt=P.filter(p=>{
+    if(q&&![p.school,p.conf,p.byuCoach,p.lbCoach,p.notes,p.x].join(' ').toLowerCase().includes(q))return false;
+    if(dv&&p.div!==dv)return false;
+    if(by==='y'&&!p.byuCoach)return false;
+    if(by==='n'&&p.byuCoach)return false;
+    if(lb==='y'&&!hasLb(p))return false;
+    if(lb==='n'&&hasLb(p))return false;
+    if(da==='y'&&!p.hasData)return false;
+    if(da==='n'&&p.hasData)return false;
+    if(ld==='y'&&!p.lds)return false;
+    if(op==='p'&&(p.opp===null||p.opp<0))return false;
+    if(op==='n'&&(p.opp===null||p.opp>=0))return false;
+    if(tr==='1'&&p.tier!==1)return false;
+    if(tr==='2'&&p.tier>2)return false;
+    return true;
+  });
+  sortF();render();
+}
+
+function sortF(){
+  const km={school:'school',div:'div',conf:'conf',opp:'opp'};
+  flt.sort((a,b)=>{
+    if(sk==='opp'){const va=a.opp??-999,vb=b.opp??-999;return sd*(va-vb);}
+    if(sk in km){return sd*String(a[km[sk]]||'').localeCompare(String(b[km[sk]]||''));}
+    return 0;
+  });
+}
+
+function srt(k){
+  const ids=['school','div','conf','opp'];
+  if(sk===k)sd*=-1;else{sk=k;sd=k==='opp'?-1:1;}
+  ids.forEach((_,i)=>{document.getElementById('a'+i).textContent='';});
+  const idx=ids.indexOf(k);
+  if(idx>=0)document.getElementById('a'+idx).textContent=sd===1?'▲':'▼';
+  sortF();render();
+}
+
+['q','dv','by','lb','da','ld','op','tr'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',applyF);
+  document.getElementById(id).addEventListener('change',applyF);
+});
+srt('opp');
+</script>
+</body>
+</html>
